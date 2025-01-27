@@ -93,11 +93,11 @@ query GetBusinessById {
 }
 
 
-const createBooking = async (businessId,date,time,userEmail,userName) => {
+const createBooking = async (businessId, date, time, userEmail, userName) => {
   const mutationQuery = gql`
   mutation CreateBooking {
   createBooking(
-    data: {bookingStatus: booked, business: {connect: {id: "`+businessId+`"}}, date: "`+date+`", time: "`+time+`", userEmail: "`+userEmail+`", userName: "`+userName+`"}
+    data: {bookingStatus: booked, businessList: {connect: {id: "`+ businessId + `"}}, date: "` + date + `", time: "` + time + `", userEmail: "` + userEmail + `", userName: "` + userName + `"}
   ) {
     id
   }
@@ -111,10 +111,10 @@ const createBooking = async (businessId,date,time,userEmail,userName) => {
 }
 
 
-const BookedSlot = async (businessId,date) => {
+const BookedSlot = async (businessId, date) => {
   const query = gql`
   query BookedSlot {
-  bookings(where: {business_every: {id: "`+businessId+`"}, date: "`+date+`"}) {
+  bookings(where: {businessList: {id: "`+ businessId + `"}, date: "` + date + `"}) {
     date
     time
   }
@@ -124,11 +124,37 @@ const BookedSlot = async (businessId,date) => {
   return result;
 }
 
+
+const GetUserBookingHistory=async(userEmail)=>{
+  const query=gql`
+  query GetUserBookingHistory {
+    bookings(where: {userEmail: "`+userEmail+`"}
+    orderBy: publishedAt_DESC) {
+      businessList {
+        name
+        images {
+          url
+        }
+        contactPerson
+        address
+      }
+      date
+      time
+      id
+    }
+  }
+  `
+  const result=await request(MASTER_URL,query)
+  return result;
+
+}
+
 export default {
   getCategory,
   getAllBusinessList,
   getBusinessByCategory,
   getBusinessById,
   createBooking,
-  BookedSlot
+  BookedSlot,
+  GetUserBookingHistory
 }

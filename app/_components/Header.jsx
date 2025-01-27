@@ -11,14 +11,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import Link from 'next/link'
 
 
 const Header = () => {
     const { data } = useSession();
-
-    useEffect(() => {
-        console.log(data)
-    }, [data]);
 
     return (
         <div className='p-5 shadow-sm flex justify-between'>
@@ -39,7 +36,9 @@ const Header = () => {
                         <DropdownMenuContent>
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>My Booking</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Link href={'/mybooking'}>My Booking</Link>
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={()=>signOut()}>Logout</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
